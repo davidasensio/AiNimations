@@ -148,6 +148,30 @@ rm $OUTPUT_2
 ```
 </details>
 
+## Navigation
+
+> The Navigation component provides support for Jetpack Compose applications. You can navigate between composables while taking advantage of the Navigation component’s infrastructure and features.
+
+Add the dependency to your _.toml_ file. Additionally you can add the material icons dependencies to your project. Thus you can use the icons in your navigation AppBar.
+```
+[versions]
+navigation-compose = "2.5.3"
+
+[libraries]
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+material-icons-core = { group = "androidx.compose.material3", name = "material-icons-core" }
+material-icons-extended = { group = "androidx.compose.material3", name = "material-icons-extended" }
+
+```
+
+The Navigation component has three main parts:
+
+- **NavController**: Responsible for navigating between destinations—that is, the screens in your app.
+- **NavGraph**: Maps composable destinations to navigate to.
+- **NavHost**: Composable acting as a container for displaying the current destination of the NavGraph.
+
+For further information check the [Navigation docs](https://developer.android.com/jetpack/compose/navigation) and [Navigation codelab](https://developer.android.com/codelabs/basic-android-kotlin-compose-navigation)
+
 [//]: # (Document links)
 
 [Ktlint]: <https://pinterest.github.io/ktlint/>
