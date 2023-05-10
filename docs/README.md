@@ -172,6 +172,35 @@ The Navigation component has three main parts:
 
 For further information check the [Navigation docs](https://developer.android.com/jetpack/compose/navigation) and [Navigation codelab](https://developer.android.com/codelabs/basic-android-kotlin-compose-navigation)
 
+## Compose Lints
+
+> Compose Lints is a collection of custom lint checks for Jetpack Compose, mostly ported from the original twitter/compose-rules project.
+> 
+> These checks are to ensure that your composables don’t fall into common pitfalls that may be easy to miss in code reviews.
+
+<p><a href="https://mvnrepository.com/artifact/com.slack.lint.compose/compose-lint-checks"><img alt="Maven Central" src="https://img.shields.io/maven-central/v/com.slack.lint.compose/compose-lint-checks.svg" /></a></p>
+
+```
+// libs.versions.toml 
+
+[versions]
+compose-lint = "1.2.0"
+
+[libraries]
+compose-lint = { module = "com.slack.lint.compose:compose-lint-checks", version.ref = "compose-lint" }
+```
+
+```
+// app/build.gradle.kts
+
+dependencies {
+    lintChecks(libs.compose.lint)
+}
+```
+
+Check the [Compose Lints docs](https://slackhq.github.io/compose-lints/) for more info.
+
+
 [//]: # (Document links)
 
 [Ktlint]: <https://pinterest.github.io/ktlint/>
