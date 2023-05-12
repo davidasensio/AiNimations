@@ -12,34 +12,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.handysparksoft.ainimations.AiNimationItem
+import com.handysparksoft.ainimations.AiNimationItemList
 import com.handysparksoft.ainimations.ui.theme.AiNimationsTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AiNimationsHorizontalPager(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    itemList: AiNimationItemList,
+    modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState()
-    val pages = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
+    val itemCount = itemList.items.size
 
     Box(modifier = modifier.fillMaxSize()) {
         HorizontalPager(
-            pageCount = pages.size,
+            pageCount = itemCount,
             pageSpacing = 16.dp,
             beyondBoundsPageCount = 2,
             state = pagerState
         ) { page ->
+            val itemContent = itemList.items[page].content
             AiNimationsCard(
                 pagerState = pagerState,
                 page = page,
                 modifier = Modifier.padding(horizontal = 64.dp, vertical = 48.dp),
-                content = content
+                content = itemContent
             )
         }
 
         PageIndicator(
-            pageCount = pages.size,
+            pageCount = itemCount,
             selectedPage = pagerState.currentPage,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -51,9 +54,16 @@ fun AiNimationsHorizontalPager(
 @Preview
 @Composable
 internal fun HorizontalPagerPreview() {
+    val items = listOf(
+        AiNimationItem(
+            title = "Sample Title 1",
+            subtitle = "Sample Subtitle 1",
+            content = {
+                Text(text = "Sample Content 1")
+            }
+        )
+    )
     AiNimationsTheme {
-        AiNimationsHorizontalPager {
-            Text(text = "Sample Content")
-        }
+        AiNimationsHorizontalPager(AiNimationItemList(items))
     }
 }

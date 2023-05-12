@@ -39,8 +39,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.handysparksoft.ainimations.components.AiNimationsHorizontalPager
 import com.handysparksoft.ainimations.components.ColumnWithCenteredContent
+import com.handysparksoft.ainimations.ui.screens.ComponentAnimationsScreen
 import com.handysparksoft.ainimations.ui.theme.AiNimationsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,7 +74,7 @@ fun AiNimationsApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = AiNimationsCategoryType.Component.route) {
-                ComponentAnimationsScreenMock()
+                ComponentAnimationsScreen()
             }
             composable(route = AiNimationsCategoryType.Canvas.route) {
                 CanvasAnimationsScreenMock(
@@ -149,19 +149,6 @@ fun AiNimationsNavigationBar(
                     }
                 }
             )
-        }
-    }
-}
-
-@Composable
-fun ComponentAnimationsScreenMock(
-    modifier: Modifier = Modifier
-) {
-    ColumnWithCenteredContent(
-        modifier = modifier
-    ) {
-        AiNimationsHorizontalPager {
-            Text(text = "Sample Animation")
         }
     }
 }
