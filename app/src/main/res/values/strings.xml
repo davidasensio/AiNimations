@@ -11,4 +11,5 @@
     <string name="share_text">Check the AiNimations source code at https://github.com/davidasensio/AiNimations</string>
 
     <string name="back">Back</string>
+    <string name="drag_to_replay">Drag to Replay</string>
 </resources>

@@ -39,6 +39,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.handysparksoft.ainimations.components.AiNimationsHorizontalPager
 import com.handysparksoft.ainimations.components.ColumnWithCenteredContent
 import com.handysparksoft.ainimations.ui.theme.AiNimationsTheme
 
@@ -159,7 +160,9 @@ fun ComponentAnimationsScreenMock(
     ColumnWithCenteredContent(
         modifier = modifier
     ) {
-        Text(text = "Component Animations Screen")
+        AiNimationsHorizontalPager {
+            Text(text = "Sample Animation")
+        }
     }
 }
 
