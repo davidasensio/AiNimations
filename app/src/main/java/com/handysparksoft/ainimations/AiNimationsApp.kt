@@ -1,6 +1,5 @@
 package com.handysparksoft.ainimations
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
@@ -9,19 +8,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,20 +43,20 @@ import com.handysparksoft.ainimations.components.ColumnWithCenteredContent
 import com.handysparksoft.ainimations.ui.theme.AiNimationsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AiNimationsApp(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = AiNimationsScreenType
-        .valueOf(backStackEntry?.destination?.route ?: AiNimationsScreenType.Start.name)
+    val currentScreen: String = backStackEntry?.destination?.route ?: AiNimationsCategoryType.Component.route
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             AiNimationsAppBar(
-                currentScreen = currentScreen,
+                currentScreen = screenItems.first { it.route == currentScreen },
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 onShareButtonClick = {
@@ -56,33 +64,25 @@ fun AiNimationsApp(
                 }
             )
         },
-        containerColor = MaterialTheme.colorScheme.secondary
+        containerColor = MaterialTheme.colorScheme.secondary,
+        bottomBar = { AiNimationsNavigationBar(navController = navController) }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AiNimationsScreenType.Start.name,
+            startDestination = AiNimationsCategoryType.Component.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = AiNimationsScreenType.Start.name) {
-                StartScreen(onNextButtonClicked = {
-                    navController.navigate(AiNimationsScreenType.SuperellipseProfileImage.name)
-                })
+            composable(route = AiNimationsCategoryType.Component.route) {
+                ComponentAnimationsScreenMock()
             }
-            composable(route = AiNimationsScreenType.SuperellipseProfileImage.name) {
-                SuperellipseProfileImageScreenMock(
-                    onBackButtonClicked = { navController.popBackStack() },
-                    onNextButtonClicked = { navController.navigate(AiNimationsScreenType.CircleProfileImage.name) }
+            composable(route = AiNimationsCategoryType.Canvas.route) {
+                CanvasAnimationsScreenMock(
+                    onBackButtonClicked = { navController.popBackStack() }
                 )
             }
-            composable(route = AiNimationsScreenType.CircleProfileImage.name) {
-                CircleProfileImageScreenMock(
-                    onBackButtonClicked = { navController.popBackStack() },
-                    onHomeButtonClicked = {
-                        navController.popBackStack(
-                            AiNimationsScreenType.Start.name,
-                            inclusive = false
-                        )
-                    }
+            composable(route = AiNimationsCategoryType.Misc.route) {
+                MiscAnimationsScreenMock(
+                    onBackButtonClicked = { navController.popBackStack() }
                 )
             }
         }
@@ -92,7 +92,7 @@ fun AiNimationsApp(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AiNimationsAppBar(
-    currentScreen: AiNimationsScreenType,
+    currentScreen: AiNimationsCategoryType,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     onShareButtonClick: () -> Unit,
@@ -126,27 +126,53 @@ fun AiNimationsAppBar(
 }
 
 @Composable
-fun StartScreen(onNextButtonClicked: () -> Unit = {}) {
-    ColumnWithCenteredContent {
-        Text(text = "Start Screen")
-        Spacer(modifier = Modifier.height(80.dp))
-        Button(onClick = onNextButtonClicked) {
-            Text(text = "SuperellipseProfileImage")
+fun AiNimationsNavigationBar(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    var selectedScreenIndex by remember { mutableStateOf(0) }
+
+    NavigationBar(modifier = modifier) {
+        screenItems.forEachIndexed { index, item ->
+            val itemLabel = stringResource(id = item.title)
+            NavigationBarItem(
+                selected = index == selectedScreenIndex,
+                icon = { Icon(item.icon, contentDescription = itemLabel) },
+                label = { Text(text = itemLabel) },
+                onClick = {
+                    selectedScreenIndex = index
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
-fun SuperellipseProfileImageScreenMock(
-    onNextButtonClicked: () -> Unit,
-    onBackButtonClicked: () -> Unit
+fun ComponentAnimationsScreenMock(
+    modifier: Modifier = Modifier
 ) {
-    ColumnWithCenteredContent {
-        Text(text = "SuperellipseProfileImage")
+    ColumnWithCenteredContent(
+        modifier = modifier
+    ) {
+        Text(text = "Component Animations Screen")
+    }
+}
+
+@Composable
+fun CanvasAnimationsScreenMock(
+    modifier: Modifier = Modifier,
+    onBackButtonClicked: () -> Unit = {}
+) {
+    ColumnWithCenteredContent(
+        modifier = modifier
+    ) {
+        Text(text = "Canvas Animations Screen")
         Spacer(modifier = Modifier.height(80.dp))
-        Button(onClick = onNextButtonClicked) {
-            Text(text = "Next")
-        }
         Button(onClick = onBackButtonClicked) {
             Text(text = "Back")
         }
@@ -154,16 +180,15 @@ fun SuperellipseProfileImageScreenMock(
 }
 
 @Composable
-fun CircleProfileImageScreenMock(
+fun MiscAnimationsScreenMock(
     onBackButtonClicked: () -> Unit,
-    onHomeButtonClicked: () -> Unit
+    modifier: Modifier = Modifier
 ) {
-    ColumnWithCenteredContent {
-        Text(text = "CircleProfileImage")
+    ColumnWithCenteredContent(
+        modifier = modifier
+    ) {
+        Text(text = "Misc Animations Screen")
         Spacer(modifier = Modifier.height(80.dp))
-        Button(onClick = onHomeButtonClicked) {
-            Text(text = "Home")
-        }
         Button(onClick = onBackButtonClicked) {
             Text(text = "Back")
         }
@@ -185,12 +210,16 @@ private fun shareApp(context: Context) {
     )
 }
 
-enum class AiNimationsScreenType(@StringRes val title: Int) {
-    Start(title = R.string.app_name),
-    SuperellipseProfileImage(title = R.string.screen_superellipse_profile_image),
-    CircleProfileImage(title = R.string.screen_circle_profile_image),
-    FlashLight(title = R.string.screen_flashlight),
-    TrashIcon(title = R.string.screen_trash_icon)
+private val screenItems = listOf(
+    AiNimationsCategoryType.Component,
+    AiNimationsCategoryType.Canvas,
+    AiNimationsCategoryType.Misc
+)
+
+sealed class AiNimationsCategoryType(val route: String, @StringRes val title: Int, val icon: ImageVector) {
+    object Component : AiNimationsCategoryType("Component", R.string.screen_component, Icons.Filled.Favorite)
+    object Canvas : AiNimationsCategoryType("Canvas", R.string.screen_canvas, Icons.Filled.Create)
+    object Misc : AiNimationsCategoryType("Misc", R.string.screen_misc, Icons.Filled.Build)
 }
 
 @Preview

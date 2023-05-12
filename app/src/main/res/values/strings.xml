@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">AiNimations</string>
 
-    <string name="screen_superellipse_profile_image">Superellipse ProfileImage</string>
-    <string name="screen_circle_profile_image">Circle ProfileImage</string>
-    <string name="screen_flashlight">Flashlight</string>
-    <string name="screen_trash_icon">Trash Icon</string>
+    <string name="screen_component">Component</string>
+    <string name="screen_canvas">Canvas</string>
+    <string name="screen_misc">Misc</string>
 
     <string name="share">Share</string>
     <string name="share_app">Share AiNimations Showcase App</string>
