@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,6 +58,7 @@ internal fun AiNimationsCard(
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
+    var refreshAnimation by remember { mutableStateOf(false) }
 
     Card(
         modifier = modifier
@@ -73,12 +75,16 @@ internal fun AiNimationsCard(
             val pageOffset = ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
 
             AiNimationBox(pageOffset) {
-                content()
+                key(refreshAnimation) {
+                    refreshAnimation = false
+                    content()
+                }
             }
             Spacer(modifier = Modifier.size(24.dp))
             AiNimationDetails()
             AiNimationDragToReplay(pageOffset = pageOffset, onDrag = {
                 Toast.makeText(context, "Replay", Toast.LENGTH_SHORT).show()
+                refreshAnimation = true
             })
         }
     }
