@@ -12,11 +12,13 @@ In the XDS Team we need to implement complex animations for our components. And 
 Check the [hackweek project](https://innovation.xing.io/ui/project/3069) for further information.
 
 ## Tech Stack
-- Kotlin
+- Kotlin, Kotlin Script 
+- Ktlint, Detekt and Compose Lints
 - Jetpack Compose
-- Ktlint and Detekt
-- Ai support as Copilot and Chat GPT
-- ...
+- Compose Navigation and Navigation Bar
+- Horizontal Pager
+- And Ai support as Copilot and Chat GPT
+
 
 ## Documentation
 You can find the technical documentation in the [`/docs/README.md`](docs/README.md) file.

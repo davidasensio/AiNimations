@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,11 +29,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -55,14 +58,14 @@ internal fun AiNimationsCard(
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val cardRadius = 24.dp
+    var refreshAnimation by remember { mutableStateOf(false) }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .shadow(16.dp, ambientColor = Color.LightGray),
-        shape = RoundedCornerShape(cardRadius)
+        shape = roundedShape
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -71,24 +74,9 @@ internal fun AiNimationsCard(
         ) {
             val pageOffset = ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
 
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .aspectRatio(ANIMATION_BOX_ASPECT_RATIO)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(cardRadius)
-                    )
-                    .clipToBounds()
-            ) {
-                Box(
-                    modifier = Modifier.graphicsLayer {
-                        val scale = lerp(1f, 2f, pageOffset)
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                ) {
+            AiNimationBox(pageOffset) {
+                key(refreshAnimation) {
+                    refreshAnimation = false
                     content()
                 }
             }
@@ -96,16 +84,42 @@ internal fun AiNimationsCard(
             AiNimationDetails()
             AiNimationDragToReplay(pageOffset = pageOffset, onDrag = {
                 Toast.makeText(context, "Replay", Toast.LENGTH_SHORT).show()
+                refreshAnimation = true
             })
         }
     }
 }
 
 @Composable
-private fun AiNimationDetails(modifier: Modifier = Modifier) {
+private fun AiNimationBox(
+    pageOffset: Float,
+    content: @Composable BoxScope.() -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .aspectRatio(ANIMATION_BOX_ASPECT_RATIO)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = roundedShape
+            )
+            .clip(roundedShape)
+            .clipToBounds()
+            .graphicsLayer {
+                val scale = lerp(1f, 2f, pageOffset)
+                scaleX = scale
+                scaleY = scale
+            },
+        content = content
+    )
+}
+
+@Composable
+private fun AiNimationDetails() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp)
     ) {
         Text(text = "Title", style = MaterialTheme.typography.headlineLarge)
         Text(text = "Subtitle", style = MaterialTheme.typography.titleSmall)
@@ -159,6 +173,8 @@ private fun AiNimationDragToReplay(
 }
 
 private const val ANIMATION_BOX_ASPECT_RATIO = 1.2f
+private const val BORDER_RADIUS = 24
+private val roundedShape = RoundedCornerShape(BORDER_RADIUS.dp)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
