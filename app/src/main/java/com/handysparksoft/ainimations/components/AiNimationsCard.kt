@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -52,6 +53,8 @@ import kotlin.math.absoluteValue
 internal fun AiNimationsCard(
     pagerState: PagerState,
     page: Int,
+    title: String,
+    subtitle: String,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -77,8 +80,7 @@ internal fun AiNimationsCard(
                     content()
                 }
             }
-            Spacer(modifier = Modifier.size(24.dp))
-            AiNimationDetails()
+            AiNimationDetails(title = title, subtitle = subtitle)
             AiNimationDragToReplay(pageOffset = pageOffset, onDrag = {
                 refreshAnimation = true
             })
@@ -112,13 +114,17 @@ private fun AiNimationBox(
 }
 
 @Composable
-private fun AiNimationDetails() {
+private fun AiNimationDetails(
+    title: String,
+    subtitle: String
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(16.dp)
     ) {
-        Text(text = "Title", style = MaterialTheme.typography.headlineLarge)
-        Text(text = "Subtitle", style = MaterialTheme.typography.titleSmall)
+        Text(text = title, style = MaterialTheme.typography.titleSmall, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.size(4.dp))
+        Text(text = subtitle, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
     }
 }
 
@@ -178,7 +184,7 @@ private val roundedShape = RoundedCornerShape(BORDER_RADIUS.dp)
 internal fun AiNimationsCardPreview() {
     val pagerState = rememberPagerState()
     AiNimationsTheme {
-        AiNimationsCard(pagerState = pagerState, page = 0) {
+        AiNimationsCard(pagerState = pagerState, page = 0, title = "Title", subtitle = "Subtitle") {
             Text(text = "Sample AiNimation")
         }
     }
