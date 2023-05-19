@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber")
 
-package com.handysparksoft.ainimations.animation.canvas
+package com.handysparksoft.ainimations.animation.misc
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing

@@ -1,4 +1,4 @@
-package com.handysparksoft.ainimations.animation
+package com.handysparksoft.ainimations.animation.misc
 
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box

@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.handysparksoft.ainimations.AiNimationItem
 import com.handysparksoft.ainimations.AiNimationItemList
-import com.handysparksoft.ainimations.animation.AnimatedFlashLight
-import com.handysparksoft.ainimations.animation.canvas.AnimatedHeart
-import com.handysparksoft.ainimations.animation.canvas.AnimatedWaves
+import com.handysparksoft.ainimations.animation.misc.AnimatedFlashLight
+import com.handysparksoft.ainimations.animation.misc.AnimatedHeart
+import com.handysparksoft.ainimations.animation.misc.AnimatedWaves
 import com.handysparksoft.ainimations.components.AiNimationsHorizontalPager
 import com.handysparksoft.ainimations.ui.theme.Lime
 
