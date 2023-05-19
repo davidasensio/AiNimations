@@ -31,12 +31,14 @@ fun AiNimationsHorizontalPager(
             pageSpacing = 16.dp,
             state = pagerState
         ) { page ->
-            val itemContent = itemList.items[page].content
+            val item = itemList.items[page]
             AiNimationsCard(
                 pagerState = pagerState,
                 page = page,
+                title = item.title,
+                subtitle = item.subtitle,
                 modifier = Modifier.padding(horizontal = 64.dp, vertical = 48.dp),
-                content = itemContent
+                content = item.content
             )
         }
 

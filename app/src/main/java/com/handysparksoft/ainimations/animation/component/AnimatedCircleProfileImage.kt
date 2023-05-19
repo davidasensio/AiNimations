@@ -1,4 +1,4 @@
-package com.handysparksoft.ainimations.animation
+package com.handysparksoft.ainimations.animation.component
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing

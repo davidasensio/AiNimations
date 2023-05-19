@@ -41,6 +41,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.handysparksoft.ainimations.components.ColumnWithCenteredContent
 import com.handysparksoft.ainimations.ui.screens.ComponentAnimationsScreen
+import com.handysparksoft.ainimations.ui.screens.MiscAnimationsScreen
 import com.handysparksoft.ainimations.ui.theme.AiNimationsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,9 +83,7 @@ fun AiNimationsApp(
                 )
             }
             composable(route = AiNimationsCategoryType.Misc.route) {
-                MiscAnimationsScreenMock(
-                    onBackButtonClicked = { navController.popBackStack() }
-                )
+                MiscAnimationsScreen()
             }
         }
     }
@@ -162,22 +161,6 @@ fun CanvasAnimationsScreenMock(
         modifier = modifier
     ) {
         Text(text = "Canvas Animations Screen")
-        Spacer(modifier = Modifier.height(80.dp))
-        Button(onClick = onBackButtonClicked) {
-            Text(text = "Back")
-        }
-    }
-}
-
-@Composable
-fun MiscAnimationsScreenMock(
-    onBackButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ColumnWithCenteredContent(
-        modifier = modifier
-    ) {
-        Text(text = "Misc Animations Screen")
         Spacer(modifier = Modifier.height(80.dp))
         Button(onClick = onBackButtonClicked) {
             Text(text = "Back")
