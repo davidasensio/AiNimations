@@ -29,7 +29,6 @@ fun AiNimationsHorizontalPager(
         HorizontalPager(
             pageCount = itemCount,
             pageSpacing = 16.dp,
-            beyondBoundsPageCount = 2,
             state = pagerState
         ) { page ->
             val itemContent = itemList.items[page].content

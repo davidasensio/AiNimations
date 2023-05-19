@@ -1,6 +1,5 @@
 package com.handysparksoft.ainimations.components
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
@@ -40,7 +39,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,7 +55,6 @@ internal fun AiNimationsCard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
     var refreshAnimation by remember { mutableStateOf(false) }
 
     Card(
@@ -83,7 +80,6 @@ internal fun AiNimationsCard(
             Spacer(modifier = Modifier.size(24.dp))
             AiNimationDetails()
             AiNimationDragToReplay(pageOffset = pageOffset, onDrag = {
-                Toast.makeText(context, "Replay", Toast.LENGTH_SHORT).show()
                 refreshAnimation = true
             })
         }
