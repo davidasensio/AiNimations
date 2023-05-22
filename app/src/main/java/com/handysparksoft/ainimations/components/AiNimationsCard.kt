@@ -1,6 +1,7 @@
 package com.handysparksoft.ainimations.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.handysparksoft.ainimations.R
 import com.handysparksoft.ainimations.ui.theme.AiNimationsTheme
+import com.handysparksoft.ainimations.ui.theme.DarkBackground
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -97,6 +99,7 @@ private fun AiNimationBox(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .aspectRatio(ANIMATION_BOX_ASPECT_RATIO)
+            .background(color = DarkBackground, shape = roundedShape)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline,
