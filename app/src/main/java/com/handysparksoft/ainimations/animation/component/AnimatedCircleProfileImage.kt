@@ -6,8 +6,11 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -32,6 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.handysparksoft.ainimations.R
 import com.handysparksoft.ainimations.components.ColumnWithCenteredContent
+import com.handysparksoft.ainimations.ui.theme.DarkBackground
 import com.handysparksoft.ainimations.ui.theme.Lime
 
 /**
@@ -39,14 +43,16 @@ import com.handysparksoft.ainimations.ui.theme.Lime
  */
 
 @Composable
-internal fun AnimatedCircleProfileImage(
+fun AnimatedCircleProfileImage(
     modifier: Modifier = Modifier,
     animationType: CircleProfileImageAnimationType = CircleProfileImageAnimationType.RotationGradient,
     startAngle: Float = AnimationTokens.StartAngle,
     strokeColor: Color = AnimationTokens.StrokeColor,
     strokeTrackColor: Color = AnimationTokens.StrokeTrackColor,
     strokeWidth: Dp? = null,
-    durationMillis: Int = AnimationTokens.Duration
+    contentPadding: Dp = Dp(0f),
+    durationMillis: Int = AnimationTokens.Duration,
+    content: @Composable BoxScope.() -> Unit = { SampleProfileImageForPreview() }
 ) {
     val isGradientColor = animationType != CircleProfileImageAnimationType.Sweep
     val animatedSweepAngle = remember { Animatable(0f) }
@@ -62,6 +68,8 @@ internal fun AnimatedCircleProfileImage(
             targetValue = AnimationTokens.EndAngle,
             animationSpec = tween(durationMillis = sweepDurationMillis, easing = LinearEasing)
         )
+
+        // Infinite rotation
         if (animationType == CircleProfileImageAnimationType.RotationGradient) {
             animatedRotationAngle.animateTo(
                 targetValue = startAngle + 360f,
@@ -73,27 +81,31 @@ internal fun AnimatedCircleProfileImage(
         }
     }
 
-    Box(
-        modifier = modifier
-            .aspectRatio(1f, true)
-    ) {
-        Box(modifier = Modifier.matchParentSize()) {
-            Image(
-                painter = painterResource(id = R.drawable.sample_ai_face),
-                contentDescription = "Profile Image Circle",
+    Box(modifier = modifier.aspectRatio(1f, true)) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(CircleShape) // Makes the border to be inside the shape (If no padding defined)
+        ) {
+            // Content
+            Box(
                 modifier = Modifier
                     .matchParentSize()
-                    .clip(CircleShape)
+                    .padding(contentPadding)
+                    .clip(CircleShape),
+                content = content
             )
+
+            // Border
             AnimatedCircleBorder(
                 animatedSweepAngle = animatedSweepAngle.value,
                 isGradientColor = isGradientColor,
                 strokeColor = strokeColor,
                 strokeTrackColor = strokeTrackColor,
                 strokeWidth = strokeWidth,
+                startAngle = AnimationTokens.StartAngle,
                 modifier = Modifier
                     .matchParentSize()
-                    .clip(CircleShape)
                     .rotate(animatedRotationAngle.value)
             )
         }
@@ -101,13 +113,14 @@ internal fun AnimatedCircleProfileImage(
 }
 
 @Composable
-private fun AnimatedCircleBorder(
+internal fun AnimatedCircleBorder(
     animatedSweepAngle: Float,
     isGradientColor: Boolean,
     strokeColor: Color,
     strokeTrackColor: Color,
     modifier: Modifier = Modifier,
-    strokeWidth: Dp? = null
+    strokeWidth: Dp? = null,
+    startAngle: Float = 0f
 ) {
     var strokeWidthDefault by remember { mutableStateOf(0.dp) }
     val strokeWidthCalculated = strokeWidth ?: strokeWidthDefault
@@ -118,20 +131,23 @@ private fun AnimatedCircleBorder(
             .drawBehind {
                 drawBorderArc(
                     strokeTrackColor = strokeTrackColor,
-                    strokeWidth = strokeWidthCalculated
+                    strokeWidth = strokeWidthCalculated,
+                    startAngle = startAngle
                 )
 
                 if (isGradientColor) {
                     drawAnimatedGradientArc(
                         animatedSweepAngle = animatedSweepAngle,
                         strokeColor = strokeColor,
-                        strokeWidth = strokeWidthCalculated
+                        strokeWidth = strokeWidthCalculated,
+                        startAngle = startAngle
                     )
                 } else {
                     drawAnimatedArc(
                         animatedSweepAngle = animatedSweepAngle,
                         strokeColor = strokeColor,
-                        strokeWidth = strokeWidthCalculated
+                        strokeWidth = strokeWidthCalculated,
+                        startAngle = startAngle
                     )
                 }
             }
@@ -141,10 +157,11 @@ private fun AnimatedCircleBorder(
 
 private fun DrawScope.drawBorderArc(
     strokeTrackColor: Color,
-    strokeWidth: Dp
+    strokeWidth: Dp,
+    startAngle: Float = 0f
 ) {
     drawArc(
-        startAngle = AnimationTokens.StartAngle,
+        startAngle = startAngle,
         sweepAngle = 360f,
         useCenter = false,
         color = strokeTrackColor,
@@ -155,10 +172,11 @@ private fun DrawScope.drawBorderArc(
 private fun DrawScope.drawAnimatedArc(
     animatedSweepAngle: Float,
     strokeColor: Color,
-    strokeWidth: Dp
+    strokeWidth: Dp,
+    startAngle: Float = 0f
 ) {
     drawArc(
-        startAngle = AnimationTokens.StartAngle,
+        startAngle = startAngle,
         sweepAngle = animatedSweepAngle,
         useCenter = false,
         color = strokeColor,
@@ -169,10 +187,11 @@ private fun DrawScope.drawAnimatedArc(
 private fun DrawScope.drawAnimatedGradientArc(
     animatedSweepAngle: Float,
     strokeColor: Color,
-    strokeWidth: Dp
+    strokeWidth: Dp,
+    startAngle: Float = 0f
 ) {
     drawArc(
-        startAngle = AnimationTokens.StartAngle,
+        startAngle = startAngle,
         sweepAngle = animatedSweepAngle,
         useCenter = false,
         brush = Brush.sweepGradient(
@@ -187,7 +206,8 @@ private fun DrawScope.drawAnimatedGradientArc(
 
 private object AnimationTokens {
     const val SafeStartAngle = 5f // Avoids the cap being painted wrongly in the Gradient version
-    const val StartAngle = SafeStartAngle // The sweep begins relative to 3 o'clock so 0f means 3 o'clock
+    const val StartAngle =
+        SafeStartAngle // The sweep begins relative to 3 o'clock. 0f means 3 o'clock
     const val EndAngle = 360f // Aka SweepAngle which is relative to startAngle
     const val Duration = 5000
     val StrokeColor = Lime
@@ -200,7 +220,8 @@ enum class CircleProfileImageAnimationType {
     RotationGradient
 }
 
-private val previewImageSize = 112.dp
+private val previewImageSize = 92.dp
+private val contentPadding = 8.dp
 
 @Preview
 @Composable
@@ -233,7 +254,7 @@ fun AnimatedRotationGradientProfileImagePreview() {
 
 @Preview
 @Composable
-fun AnimatedSweepWithWhiteBorderProfileImagePreview() {
+fun AnimatedSweepWithWhiteFrameProfileImagePreview() {
     AnimatedCircleProfileImage(
         animationType = CircleProfileImageAnimationType.Sweep,
         modifier = Modifier.size(previewImageSize),
@@ -243,11 +264,33 @@ fun AnimatedSweepWithWhiteBorderProfileImagePreview() {
 
 @Preview
 @Composable
+fun AnimatedSweepProfileImageWithPaddingPreview() {
+    AnimatedCircleProfileImage(
+        animationType = CircleProfileImageAnimationType.Sweep,
+        contentPadding = contentPadding,
+        modifier = Modifier.size(previewImageSize)
+    )
+}
+
+@Preview
+@Composable
 fun AnimatedProfileImagesPreview() {
-    ColumnWithCenteredContent {
+    ColumnWithCenteredContent(
+        modifier = Modifier.background(color = DarkBackground)
+    ) {
         AnimatedSweepProfileImagePreview()
         AnimatedSweepGradientProfileImagePreview()
         AnimatedRotationGradientProfileImagePreview()
-        AnimatedSweepWithWhiteBorderProfileImagePreview()
+        AnimatedSweepWithWhiteFrameProfileImagePreview()
+        AnimatedSweepProfileImageWithPaddingPreview()
     }
+}
+
+@Composable
+private fun BoxScope.SampleProfileImageForPreview() {
+    Image(
+        painter = painterResource(id = R.drawable.sample_ai_face),
+        contentDescription = "Profile Image Circle",
+        modifier = Modifier.matchParentSize()
+    )
 }
