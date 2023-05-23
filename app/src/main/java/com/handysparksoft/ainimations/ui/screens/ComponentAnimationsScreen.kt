@@ -3,9 +3,11 @@ package com.handysparksoft.ainimations.ui.screens
 import androidx.compose.runtime.Composable
 import com.handysparksoft.ainimations.AiNimationItem
 import com.handysparksoft.ainimations.AiNimationItemList
-import com.handysparksoft.ainimations.animation.component.AnimatedBorderGradientSquareProfileImagePreview
 import com.handysparksoft.ainimations.animation.component.AnimatedBorderGradientSquareWithWhiteFrameProfileImagePreview
 import com.handysparksoft.ainimations.animation.component.AnimatedBorderSquareProfileImageWithPaddingPreview
+import com.handysparksoft.ainimations.animation.component.AnimatedCoolCircleProfileImagePreview
+import com.handysparksoft.ainimations.animation.component.AnimatedCoolCircleProfileImageWithGradientColorPreview
+import com.handysparksoft.ainimations.animation.component.AnimatedCoolCircleProfileImageWithPaddingPreview
 import com.handysparksoft.ainimations.animation.component.AnimatedNonInfiniteBorderSquareProfileImagePreview
 import com.handysparksoft.ainimations.animation.component.AnimatedRotationGradientProfileImagePreview
 import com.handysparksoft.ainimations.animation.component.AnimatedSweepGradientProfileImagePreview
@@ -20,6 +22,7 @@ fun ComponentAnimationsScreen() {
     )
 }
 
+@Suppress("LongMethod")
 private fun getComponentItems() = AiNimationItemList(
     listOf(
         AiNimationItem(
@@ -69,6 +72,27 @@ private fun getComponentItems() = AiNimationItemList(
             subtitle = "Animated Square Border (With padding)",
             content = {
                 AnimatedBorderSquareProfileImageWithPaddingPreview()
+            }
+        ),
+        AiNimationItem(
+            title = "Circle Profile Image",
+            subtitle = "Cool Sweep Animation",
+            content = {
+                AnimatedCoolCircleProfileImagePreview()
+            }
+        ),
+        AiNimationItem(
+            title = "Circle Profile Image",
+            subtitle = "Cool Sweep Animation (With padding)",
+            content = {
+                AnimatedCoolCircleProfileImageWithPaddingPreview()
+            }
+        ),
+        AiNimationItem(
+            title = "Circle Profile Image",
+            subtitle = "Cool Sweep Animation (With gradient color)",
+            content = {
+                AnimatedCoolCircleProfileImageWithGradientColorPreview()
             }
         )/*,
         AiNimationItem(
